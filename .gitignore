@@ -1,0 +1,10 @@
+.vs
+
+ctrl-ble/.vs
+ctrl-ble/bin
+
+ctrl-ble/BluetoothLE/bin
+ctrl-ble/BluetoothLE/obj
+
+ctrl-ble/CtrlBluetoothLE/bin
+ctrl-ble/CtrlBluetoothLE/obj
