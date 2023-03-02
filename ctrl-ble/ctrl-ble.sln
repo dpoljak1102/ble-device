@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33328.57
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CtrlBluetoothLE", "CtrlBluetoothLE\CtrlBluetoothLE.csproj", "{89C21D2D-CB55-481F-9563-4379750A877E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BluetoothLE", "BluetoothLE\BluetoothLE.csproj", "{AB2243CA-28E4-43E3-9D20-C9039F579610}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{89C21D2D-CB55-481F-9563-4379750A877E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89C21D2D-CB55-481F-9563-4379750A877E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89C21D2D-CB55-481F-9563-4379750A877E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89C21D2D-CB55-481F-9563-4379750A877E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB2243CA-28E4-43E3-9D20-C9039F579610}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB2243CA-28E4-43E3-9D20-C9039F579610}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB2243CA-28E4-43E3-9D20-C9039F579610}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB2243CA-28E4-43E3-9D20-C9039F579610}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BDFBD8BB-9824-44AB-89BF-3AFFC2D103CC}
+	EndGlobalSection
+EndGlobal
