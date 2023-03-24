@@ -19,7 +19,6 @@ namespace BluetoothLE
             {
                 device.DeviceInformation.Pairing.Custom.PairingRequested += Custom_PairingRequested;
                 var result = await device.DeviceInformation.Pairing.Custom.PairAsync(DevicePairingKinds.ConfirmOnly);
-                //var result = await device.DeviceInformation.Pairing.PairAsync();
 
                 return new PairingResult()
                 {

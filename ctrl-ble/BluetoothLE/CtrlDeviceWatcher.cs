@@ -23,7 +23,7 @@ namespace BluetoothLE
         private List<string> _filters;
 
         public event EventHandler<DeviceAddedEventArgs> DeviceAdded;
-        protected virtual void OnDeviceAdded(Events.DeviceAddedEventArgs e)
+        protected virtual void OnDeviceAdded(DeviceAddedEventArgs e)
         {
             DeviceAdded?.Invoke(this, e);
         }
@@ -175,7 +175,7 @@ namespace BluetoothLE
                 {
                     var args = new DeviceRemovedEventArgs()
                     {
-                        Device = new Model.WatcherDevice()
+                        Device = new WatcherDevice()
                         {
                             Id = deviceInformationUpdate.Id,
                             Kind = deviceInformationUpdate.Kind.ToString(),

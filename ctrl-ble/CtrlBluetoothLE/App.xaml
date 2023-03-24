@@ -2,8 +2,31 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:CtrlBluetoothLE"
-             StartupUri="MainWindow.xaml">
+             xmlns:viewModels="clr-namespace:CtrlBluetoothLE.ViewModels"
+             xmlns:view="clr-namespace:CtrlBluetoothLE.Views">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Assets/Colors.xaml" />
+                <ResourceDictionary Source="Assets/Icons.xaml" />
+                <ResourceDictionary Source="Assets/ButtonStyles.xaml" />
+                <ResourceDictionary Source="Assets/ScrollBarStyles.xaml" />
+                <ResourceDictionary Source="Assets/ListViewStyles.xaml" />
+                <ResourceDictionary Source="Assets/ProgressBarStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate DataType="{x:Type viewModels:FpvCtrlViewModel}">
+                <view:FpvCtrlView />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModels:AvailableCtrlControllersViewModel}">
+                <view:AvailableCtrlControllersPopupWindow />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModels:LoadingViewModel}">
+                <view:LoadingView />
+            </DataTemplate>
+
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

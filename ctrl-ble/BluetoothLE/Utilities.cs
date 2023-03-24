@@ -81,7 +81,6 @@ namespace BluetoothLE
 
         public static CtrlDeviceInfo ParseDataValueFromControllerDevice(byte[] data)
         {
-            //var controler = new Model.
             var deviceValue = new CtrlDeviceInfo();
             deviceValue.GimbalLeftX = BitConverter.ToUInt16(data, 2);
             deviceValue.GimbalLeftY = BitConverter.ToUInt16(data, 4);
@@ -96,16 +95,14 @@ namespace BluetoothLE
             deviceValue.RightPressButton = CalculateButton(buttonsArray, 2);
             deviceValue.ButtonA = CalculateButton(buttonsArray, 1);
             deviceValue.ButtonB = CalculateButton(buttonsArray, 0);
+            deviceValue.Ghost = GhostMode(Convert.ToString(data[19], 2).PadLeft(8, '0'));
 
-            // Kada se stavi ghoste onda na paketu 20 cu slusati ovaj ispod string 
-            // ako se pojavi 00000000 onda je ghost uredu inace je int vrijendost 4 00010000
+            //Note :  GHOST PACKET(20) active when value is 00000000 
             //Console.WriteLine($"Packet 20 : {Convert.ToString(data[19], 2).PadLeft(8, '0')}");
             //Console.WriteLine($"Ghost mode : {GhostMode(Convert.ToString(data[19], 2).PadLeft(8, '0'))}");
 
-            deviceValue.Ghost = GhostMode(Convert.ToString(data[19], 2).PadLeft(8, '0'));
-
-            //Calibration paketi koji dolaze kada se napravi write atribut
-            Console.WriteLine($"Packet 18 : {Convert.ToString(data[18], 2).PadLeft(8, '0')}");
+            //Note : When we write to service, then packets coming to 18
+            //Console.WriteLine($"Packet 18 : {Convert.ToString(data[18], 2).PadLeft(8, '0')}");
 
             return deviceValue;
 

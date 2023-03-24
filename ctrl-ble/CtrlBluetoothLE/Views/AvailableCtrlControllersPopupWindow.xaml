@@ -1,0 +1,210 @@
+﻿<Window x:Class="CtrlBluetoothLE.Views.AvailableCtrlControllersPopupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CtrlBluetoothLE.Views"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Height="670"
+        Width="500"
+        Background="{DynamicResource BackgroundBrush}">
+    <Border BorderThickness="0.3"
+            CornerRadius="5"
+            BorderBrush="{DynamicResource InactiveFontBrush}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5" />
+                <RowDefinition Height="20" />
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="20" />
+            </Grid.RowDefinitions>
+
+            <!-- WINDOWS HEADER-->
+            <StackPanel Grid.Row="1"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center">
+                <TextBlock FontFamily="Arial"
+                           FontSize="10"
+                           Foreground="{DynamicResource ActiveFontBrush}"
+                           Text=""
+                           Margin="10,4,0,0" />
+            </StackPanel>
+            <StackPanel Grid.Row="1"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                <!-- CLOSE BUTTON -->
+                <Button Style="{DynamicResource ButtonStyleWindow}"
+                        Focusable="False"
+                        Cursor="Hand"
+                        Margin="0,0,10,0"
+                        Click="WindowCloseButton_Click">
+                    <Button.Content>
+                        <Viewbox Width="15"
+                                 Height="20">
+                            <Canvas Width="20"
+                                    Height="25">
+                                <Path Data="{DynamicResource CloseIcon}"
+                                      Fill="{DynamicResource InactiveFontBrush}" />
+                            </Canvas>
+                        </Viewbox>
+                    </Button.Content>
+                </Button>
+
+            </StackPanel>
+
+            <!--CONTENT -->
+            <Grid Grid.Row="2"
+                  Margin="20,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="60" />
+                </Grid.RowDefinitions>
+
+                <!-- Header -->
+                <StackPanel Grid.Row="0">
+                    <TextBlock Text="Connect to your controller"
+                               HorizontalAlignment="Center"
+                               FontSize="30"
+                               FontFamily="Arial"
+                               Foreground="{DynamicResource ActiveFontBrush}" />
+
+                    <TextBlock Text="(Searching for FPV.Ctrl bluetooth devices)"
+                               HorizontalAlignment="Center"
+                               FontSize="15"
+                               FontFamily="Arial"
+                               Foreground="{DynamicResource InactiveFontBrush}" />
+                </StackPanel>
+
+                <!-- Bluetooth devices -->
+                <Border Grid.Row="1"
+                        Margin="0,10"
+                        MinWidth="450"
+                        Height="480"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Left"
+                        BorderBrush="{DynamicResource InactiveFontBrush}"
+                        BorderThickness="0,0.8,0,0.8">
+
+                    <Grid>
+                        <!-- Loading content -->
+                        <Grid>
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsLoading}"
+                                                     Value="True">
+                                            <Setter Property="Visibility"
+                                                    Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+                            <ContentControl Content="{Binding ContentState, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+
+                        <!-- Content -->
+                        <Grid>
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsLoading}"
+                                                     Value="False">
+                                            <Setter Property="Visibility"
+                                                    Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+                            <ListView Grid.Row="1"
+                                      Background="Transparent"
+                                      BorderBrush="Transparent"
+                                      HorizontalAlignment="Left"
+                                      ItemsSource="{Binding UnpairedCollection, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                      SelectedItem="{Binding SelecteBluetoothDevice,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Cursor="Hand"
+                                              Margin="0,10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="40" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Border Width="37"
+                                                    Height="37"
+                                                    CornerRadius="25"
+                                                    BorderBrush="{DynamicResource InactiveFontBrush}"
+                                                    BorderThickness="0.8"
+                                                    VerticalAlignment="Top"
+                                                    HorizontalAlignment="Center">
+                                                <Viewbox Width="25"
+                                                         Height="25">
+                                                    <Canvas Width="24"
+                                                            Height="24">
+                                                        <Path Fill="{DynamicResource InactiveFontBrush}"
+                                                              Data="{DynamicResource BluetoothIcon}" />
+                                                    </Canvas>
+                                                </Viewbox>
+                                            </Border>
+
+                                            <StackPanel Grid.Column="1"
+                                                        Margin="10,3">
+                                                <TextBlock Text="{Binding Name}"
+                                                           Foreground="{DynamicResource ActiveFontBrush}"
+                                                           FontSize="15"
+                                                           FontFamily="Arial" />
+
+                                                <TextBlock Text="{Binding Id}"
+                                                           Foreground="{DynamicResource InactiveFontBrush}"
+                                                           FontSize="14"
+                                                           Margin="0"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
+
+                        
+                    </Grid>
+
+                </Border>
+
+                <!-- Button -->
+                <StackPanel Grid.Row="2">
+                    <Button  Style="{DynamicResource ButtonStyleSubmit}"
+                             Cursor="Hand"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Top"
+                             Width="250"
+                             Height="35"
+                             FontSize="15"
+                             Click="BluetoothDevicePairedButton_Click"
+                             Content="{Binding ConnectionButtonContent, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <TextBlock HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource ColorRed}"
+                               FontSize="17"
+                               Width="350"
+                               TextWrapping="Wrap"
+                               Text="{Binding ConnectionErrorMessage, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+
+            </Grid>
+
+        </Grid>
+
+    </Border>
+</Window>

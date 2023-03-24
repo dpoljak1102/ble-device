@@ -5,350 +5,112 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CtrlBluetoothLE"
         mc:Ignorable="d"
-        Title="MainWindow" Height="850" Width="800">
-    <Grid>
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        AllowsTransparency="True"
+        MouseLeftButtonDown="Windows_Drag"
+        Name="MainWindowName"
+        ResizeMode="NoResize"
+        Height="750"
+        Width="1300"
+        Background="Transparent">
+    <Border BorderThickness="0.8"
+            CornerRadius="8"
+            BorderBrush="{DynamicResource InactiveFontBrush}"
+            Background="{DynamicResource BackgroundBrush}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-        </Grid.RowDefinitions>
+            <!-- WINDOWS HEADER-->
+            <StackPanel Grid.Row="0"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center">
+                <TextBlock FontFamily="Arial"
+                           FontSize="10"
+                           Foreground="{DynamicResource ActiveFontBrush}"
+                           Text="FPV.ONE CTRL"
+                           Margin="10,4,0,0" />
 
+                <TextBlock FontFamily="Arial"
+                           FontSize="10"
+                           Foreground="{DynamicResource InactiveFontBrush}"
+                           Text="(Bluetooth Low Energy)"
+                           Margin="5,4,0,0" />
 
-        <Grid Grid.Row="0"
-              Margin="20,20">
-            <StackPanel>
+            </StackPanel>
+            <StackPanel Grid.Row="0"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
 
-                <TextBlock x:Name="TxtHr"
-                           FontSize="25"
-                           FontFamily="Arial"
-                           Visibility="Visible"
-                           TextWrapping="Wrap"
-                           Text="Device"
-                           HorizontalAlignment="Left" />
+                <!-- MINIMIZE BUTTON -->
+                <Button Style="{DynamicResource ButtonStyleWindow}"
+                        Cursor="Hand"
+                        Margin="0,0,15,0"
+                        Click="MinimizeButton_Click">
+                    <Button.Content>
+                        <Viewbox Width="15"
+                                 Height="20">
+                            <Canvas Width="20"
+                                    Height="20">
+                                <Path Data="{DynamicResource MinimizeIcon}"
+                                      Fill="{DynamicResource InactiveFontBrush}" />
+                            </Canvas>
+                        </Viewbox>
+                    </Button.Content>
+                </Button>
 
-                <StackPanel Orientation="Horizontal"
-                            Margin="10,20">
-                    <TextBlock Text="Status : "
-                               FontSize="20"
-                               FontFamily="Arial" />
+                <!-- MAXIMIZE BUTTON -->
+                <Button Style="{DynamicResource ButtonStyleWindow}"
+                        Focusable="False"
+                        Cursor="Hand"
+                        Margin="0,0,15,0"
+                        Click="MaximizeButton_Click"
+                        Visibility="Collapsed">
+                    <Button.Content>
+                        <Viewbox Width="15"
+                                 Height="20">
+                            <Canvas Width="20"
+                                    Height="25">
+                                <Path Data="{DynamicResource MaximizeIcon}"
+                                      Fill="{DynamicResource InactiveFontBrush}" />
+                            </Canvas>
+                        </Viewbox>
+                    </Button.Content>
+                </Button>
 
-                    <TextBlock x:Name="TxtStatus"
-                               FontSize="20"
-                               FontFamily="Arial"
-                               TextWrapping="Wrap"
-                               Text="Disconnected"
-                               HorizontalAlignment="Center" />
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal"
-                            Margin="10,0">
-                    <TextBlock Text="Battery : "
-                               FontSize="20"
-                               FontFamily="Arial" />
-
-                    <TextBlock x:Name="TxtBattery"
-                               FontSize="20"
-                               FontFamily="Arial"
-                               TextWrapping="Wrap"
-                               Text="battery level: --" />
-                </StackPanel>
+                <!-- CLOSE BUTTON -->
+                <Button Style="{DynamicResource ButtonStyleWindow}"
+                        Focusable="False"
+                        Cursor="Hand"
+                        Margin="0,0,10,0"
+                        Click="WindowCloseButton_Click">
+                    <Button.Content>
+                        <Viewbox Width="15"
+                                 Height="20">
+                            <Canvas Width="20"
+                                    Height="25">
+                                <Path Data="{DynamicResource CloseIcon}"
+                                      Fill="{DynamicResource InactiveFontBrush}" />
+                            </Canvas>
+                        </Viewbox>
+                    </Button.Content>
+                </Button>
 
             </StackPanel>
 
+            <!-- USERCONTROLER CONTENT-->
+            <ContentControl Grid.Row="1"
+                            Margin="5"
+                            Content="{Binding NavigationService.CurrentView, UpdateSourceTrigger=PropertyChanged}">
+            </ContentControl>
 
         </Grid>
 
-        <Grid Grid.Row="1"
-              Margin="30,0">
-
-            <StackPanel Orientation="Horizontal">
-                <Button x:Name="PairDeviceButton"
-                        Content="Connect Device"
-                        IsEnabled="True"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Stretch"
-                        Width="100"
-                        Margin="0,0,10,10"
-                        Click="PairDeviceButton_Click" />
-                <Button x:Name="CalibrationButton"
-                        Content="Calibration"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Stretch"
-                        Width="100"
-                        Margin="0,0,10,10"
-                        Click="CalibrationButton_Click" />
-                <Button x:Name="BtnReadInfo"
-                        Content="Update Info"
-                        IsEnabled="False"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Stretch"
-                        Width="100"
-                        Margin="0,0,10,10"
-                        Click="BtnReadInfo_Click" />
-
-            </StackPanel>
-        </Grid>
-
-        <Grid Grid.Row="2"
-              Margin="20,20">
-            <StackPanel Orientation="Horizontal"
-                        Margin="10,0">
-
-                <StackPanel>
-                    <TextBlock TextWrapping="Wrap"
-                               Text="X"
-                               HorizontalAlignment="Center"
-                               FontSize="40" />
-                    <TextBlock x:Name="GimbalLeftX"
-                               TextWrapping="Wrap"
-                               Text="--"
-                               HorizontalAlignment="Center"
-                               FontSize="40" />
-                </StackPanel>
-
-                <StackPanel Margin="50,0">
-                    <TextBlock TextWrapping="Wrap"
-                               Text="Y"
-                               HorizontalAlignment="Center"
-                               FontSize="40" />
-                    <TextBlock  x:Name="GimbalLeftY"
-                                TextWrapping="Wrap"
-                                Text="--"
-                                HorizontalAlignment="Center"
-                                FontSize="40" />
-                </StackPanel>
-
-                <StackPanel>
-                    <TextBlock TextWrapping="Wrap"
-                               Text="X"
-                               HorizontalAlignment="Center"
-                               FontSize="40" />
-                    <TextBlock  x:Name="GimbalRightX"
-                                TextWrapping="Wrap"
-                                Text="--"
-                                HorizontalAlignment="Center"
-                                FontSize="40" />
-                </StackPanel>
-
-                <StackPanel Margin="50,0">
-                    <TextBlock TextWrapping="Wrap"
-                               Text="Y"
-                               HorizontalAlignment="Center"
-                               FontSize="40" />
-                    <TextBlock  x:Name="GimbalRightY"
-                                TextWrapping="Wrap"
-                                Text="--"
-                                HorizontalAlignment="Center"
-                                FontSize="40" />
-                </StackPanel>
-
-            </StackPanel>
-
-
-        </Grid>
-
-        <Grid Name="GhostUbert"
-              Grid.Row="3"
-              Grid.RowSpan="2"
-              HorizontalAlignment="Left"
-              Margin="180,0"
-              Grid.ColumnSpan="3"
-              Visibility="Collapsed">
-            <Image
-                   MaxWidth="250"
-                   VerticalAlignment="Bottom" />
-        </Grid>
-
-        <Grid Grid.Row="4"
-              HorizontalAlignment="Left"
-              Margin="50,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-
-            <Image Grid.Column="0"
-                   Grid.ColumnSpan="2"
-                   
-                   MaxWidth="500" />
-
-            <Canvas Grid.Column="0"
-                    Width="130"
-                    Height="130"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Background="Silver"
-                    Margin="45,75">
-                <Ellipse Name="gimbalLeft"
-                         Canvas.Left="50"
-                         Canvas.Bottom="50"
-                         Width="30"
-                         Height="30"
-                         Fill="DarkRed"
-                         Stroke="Red"
-                         StrokeThickness="2" />
-            </Canvas>
-
-            <Canvas Grid.Column="0"
-                    Width="130"
-                    Height="130"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Background="Transparent"
-                    Margin="45,75">
-                <Ellipse Name="gimbalCalibrationLeft"
-                         Visibility="Collapsed"
-                         Canvas.Left="50"
-                         Canvas.Bottom="50"
-                         Width="30"
-                         Height="30"
-                         Fill="Transparent"
-                         Stroke="Red"
-                         StrokeThickness="4" />
-            </Canvas>
-
-            <Canvas Grid.Column="1"
-                    Width="130"
-                    Height="130"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top"
-                    Background="Silver"
-                    Margin="45,75">
-                <Ellipse Name="gimbalRight"
-                         Canvas.Left="50"
-                         Canvas.Bottom="50"
-                         Width="30"
-                         Height="30"
-                         Fill="DarkRed"
-                         Stroke="Red"
-                         StrokeThickness="2" />
-            </Canvas>
-
-            <Canvas Grid.Column="1"
-                    Width="130"
-                    Height="130"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top"
-                    Background="Transparent"
-                    Margin="45,75">
-                <Ellipse Name="gimbalCalibrationRight"
-                         Visibility="Collapsed"
-                         Canvas.Left="50"
-                         Canvas.Bottom="50"
-                         Width="30"
-                         Height="30"
-                         Fill="Transparent"
-                         Stroke="Red"
-                         StrokeThickness="4" />
-            </Canvas>
-
-            <Grid Grid.Column="2"
-                  HorizontalAlignment="Left"
-                  VerticalAlignment="Top"
-                  Margin="50,0">
-
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="LS"
-                                   FontSize="20"></TextBlock>
-                        <ProgressBar Name="LeftSwitchButton"
-                                     Margin="20,0"
-                                     Minimum="0"
-                                     Maximum="2"
-                                     Width="150"
-                                     Height="20"
-                                     BorderBrush="Black"
-                                     BorderThickness="1"
-                                     Foreground="Red"
-                                     Background="Transparent" />
-                    </StackPanel>
-
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="LP"
-                                   FontSize="20"></TextBlock>
-                        <ProgressBar Name="LeftPressButton"
-                                     Margin="20,0"
-                                     Minimum="0"
-                                     Maximum="1"
-                                     Width="150"
-                                     Height="20"
-                                     BorderBrush="Black"
-                                     BorderThickness="1"
-                                     Foreground="Red"
-                                     Background="Transparent" />
-                    </StackPanel>
-
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="RS"
-                                   FontSize="20"></TextBlock>
-                        <ProgressBar Name="RightSwitchButton"
-                                     Margin="20,0"
-                                     Minimum="0"
-                                     Maximum="2"
-                                     Width="150"
-                                     Height="20"
-                                     BorderBrush="Black"
-                                     BorderThickness="1"
-                                     Foreground="Red"
-                                     Background="Transparent" />
-                    </StackPanel>
-
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="RP"
-                                   FontSize="20"></TextBlock>
-                        <ProgressBar Name="RightPressButton"
-                                     Margin="20,0"
-                                     Minimum="0"
-                                     Maximum="1"
-                                     Width="150"
-                                     Height="20"
-                                     BorderBrush="Black"
-                                     BorderThickness="1"
-                                     Foreground="Red"
-                                     Background="Transparent" />
-                    </StackPanel>
-
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="BA"
-                                   FontSize="20"></TextBlock>
-                        <ProgressBar Name="ButtonA"
-                                     Margin="20,0"
-                                     Minimum="0"
-                                     Maximum="1"
-                                     Width="150"
-                                     Height="20"
-                                     BorderBrush="Black"
-                                     BorderThickness="1"
-                                     Foreground="Red"
-                                     Background="Transparent" />
-                    </StackPanel>
-
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="BB"
-                                   FontSize="20"></TextBlock>
-                        <ProgressBar Name="ButtonB"
-                                     Margin="20,0"
-                                     Minimum="0"
-                                     Maximum="1"
-                                     Width="150"
-                                     Height="20"
-                                     BorderBrush="Black"
-                                     BorderThickness="1"
-                                     Foreground="Red"
-                                     Background="Transparent" />
-                    </StackPanel>
-
-                </StackPanel>
-            </Grid>
-
-        </Grid>
-
-
-
-
-    </Grid>
+    </Border>
+   
 </Window>

@@ -26,12 +26,12 @@ namespace BluetoothLE
         /// <summary>
         /// Occurs when [connection status changed].
         /// </summary>
-        public event EventHandler<Events.ConnectionStatusChangedEventArgs> ConnectionStatusChanged;
+        public event EventHandler<ConnectionStatusChangedEventArgs> ConnectionStatusChanged;
         /// <summary>
         /// Raises the <see cref="E:ConnectionStatusChanged" /> event.
         /// </summary>
-        /// <param name="e">The <see cref="Events.ConnectionStatusChangedEventArgs"/> instance containing the event data.</param>
-        protected virtual void OnConnectionStatusChanged(Events.ConnectionStatusChangedEventArgs e)
+        /// <param name="e">The <see cref="ConnectionStatusChangedEventArgs"/> instance containing the event data.</param>
+        protected virtual void OnConnectionStatusChanged(ConnectionStatusChangedEventArgs e)
         {
             ConnectionStatusChanged?.Invoke(this, e);
         }
@@ -39,36 +39,35 @@ namespace BluetoothLE
         /// <summary>
         /// Occurs when [value changed].
         /// </summary>
-        public event EventHandler<Events.DeviceChangedEventArgs> ValueChanged;
+        public event EventHandler<DeviceChangedEventArgs> ValueChanged;
         /// <summary>
         /// Raises the <see cref="E:ValueChanged" /> event.
         /// </summary>
-        /// <param name="e">The <see cref="Events.DeviceChangedEventArgs"/> instance containing the event data.</param>
-        protected virtual void OnValueChanged(Events.DeviceChangedEventArgs e)
+        /// <param name="e">The <see cref="DeviceChangedEventArgs"/> instance containing the event data.</param>
+        protected virtual void OnValueChanged(DeviceChangedEventArgs e)
         {
             ValueChanged?.Invoke(this, e);
         }
-
 
         public async Task<ConnectionResult> ConnectAsync(string deviceId)
         {
             _ctrlDevice = await BluetoothLEDevice.FromIdAsync(deviceId);
             if (_ctrlDevice == null)
             {
-                return new Model.ConnectionResult()
+                return new ConnectionResult()
                 {
                     IsConnected = false,
-                    ErrorMessage = "Could not find specified device"
+                    ErrorMessage = "Could not find specified device."
                 };
             }
 
             if (!_ctrlDevice.DeviceInformation.Pairing.IsPaired)
             {
                 _ctrlDevice = null;
-                return new Model.ConnectionResult()
+                return new ConnectionResult()
                 {
                     IsConnected = false,
-                    ErrorMessage = "Device is not paired"
+                    ErrorMessage = "Device is not paired."
                 };
             }
 
@@ -80,17 +79,17 @@ namespace BluetoothLE
             if (!isReachable)
             {
                 _ctrlDevice = null;
-                return new Model.ConnectionResult()
+                return new ConnectionResult()
                 {
                     IsConnected = false,
-                    ErrorMessage = "Heart rate device is unreachable (i.e. out of range or shutoff)"
+                    ErrorMessage = "Device is unreachable."
                 };
             }
 
             CharacteristicResult characteristicResult;
             characteristicResult = await SetupCtrlCharacteristic();
             if (!characteristicResult.IsSuccess)
-                return new Model.ConnectionResult()
+                return new ConnectionResult()
                 {
                     IsConnected = false,
                     ErrorMessage = characteristicResult.Message
@@ -100,13 +99,12 @@ namespace BluetoothLE
             // we could force propagation of event with connection status change, to run the callback for initial status
             DeviceConnectionStatusChanged(_ctrlDevice, null);
 
-            return new Model.ConnectionResult()
+            return new ConnectionResult()
             {
                 IsConnected = _ctrlDevice.ConnectionStatus == BluetoothConnectionStatus.Connected,
                 Name = _ctrlDevice.Name
             };
         }
-
 
         private async Task<List<BluetoothAttribute>> GetServiceCharacteristicsAsync(BluetoothAttribute service)
         {
@@ -117,7 +115,7 @@ namespace BluetoothLE
                 var accessStatus = await service.service.RequestAccessAsync();
                 if (accessStatus == DeviceAccessStatus.Allowed)
                 {
-                    // BT_Code: Get all the child characteristics of a service. Use the cache mode to specify uncached characterstics only 
+                    // Get all the child characteristics of a service. Use the cache mode to specify uncached characterstics only 
                     // and the new Async functions to get the characteristics of unpaired devices as well. 
                     var result = await service.service.GetCharacteristicsAsync(BluetoothCacheMode.Uncached);
                     if (result.Status == GattCommunicationStatus.Success)
@@ -142,10 +140,9 @@ namespace BluetoothLE
             }
 
             var characteristicCollection = new List<BluetoothAttribute>();
-            characteristicCollection.AddRange(characteristics.Select(a => new BluetoothAttribute(a)));
+            characteristicCollection.AddRange(characteristics.Select(attribute => new BluetoothAttribute(attribute)));
             return characteristicCollection;
         }
-
 
         private async Task<CharacteristicResult> SetupCtrlCharacteristic()
         {
@@ -158,7 +155,7 @@ namespace BluetoothLE
                 return new CharacteristicResult()
                 {
                     IsSuccess = false,
-                    Message = "Cannot find Devices service"
+                    Message = "Cannot find devices service."
                 };
             }
 
@@ -172,7 +169,7 @@ namespace BluetoothLE
                 return new CharacteristicResult()
                 {
                     IsSuccess = false,
-                    Message = "Cannot find Custom characteristic"
+                    Message = "Cannot find custom characteristic."
                 };
             }
             _ctrlMeasurementCharacteristic = _ctrlMeasurementAttribute.characteristic;
@@ -207,7 +204,7 @@ namespace BluetoothLE
                 return new CharacteristicResult()
                 {
                     IsSuccess = false,
-                    Message = "Characteristic does not support Gatt Characteristic Properties Nofity"
+                    Message = "Characteristic does not support Gatt Characteristic Properties Nofity."
                 };
 
             }
@@ -217,13 +214,13 @@ namespace BluetoothLE
         private async Task<bool> GetDeviceServicesAsync()
         {
             // Note: BluetoothLEDevice.GattServices property will return an empty list for unpaired devices. For all uses we recommend using the GetGattServicesAsync method.
-            // BT_Code: GetGattServicesAsync returns a list of all the supported services of the device (even if it's not paired to the system).
+            // GetGattServicesAsync returns a list of all the supported services of the device (even if it's not paired to the system).
             // If the services supported by the device are expected to change during BT usage, subscribe to the GattServicesChanged event.
             GattDeviceServicesResult result = await _ctrlDevice.GetGattServicesAsync(BluetoothCacheMode.Uncached);
 
             if (result.Status == GattCommunicationStatus.Success)
             {
-                _serviceCollection.AddRange(result.Services.Select(a => new BluetoothAttribute(a)));
+                _serviceCollection.AddRange(result.Services.Select(attribute => new BluetoothAttribute(attribute)));
                 return true;
             }
             else
@@ -240,7 +237,8 @@ namespace BluetoothLE
                 {
                     //NOTE: might want to do something here if the result is not successful
                     var result = await _ctrlMeasurementCharacteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.None);
-                    if (_ctrlMeasurementCharacteristic.Service != null)
+                    //Here we must check _ctrlMeasurementCharacteristic != null becouse on POWER button we can turn off CTRL 
+                    if (_ctrlMeasurementCharacteristic != null && _ctrlMeasurementCharacteristic.Service != null)
                         _ctrlMeasurementCharacteristic.Service.Dispose();
                     _ctrlMeasurementCharacteristic = null;
                 }
@@ -260,8 +258,9 @@ namespace BluetoothLE
                 }
 
                 _serviceCollection = new List<BluetoothAttribute>();
-
-                _ctrlDevice.Dispose();
+                //Here we MUST check _ctrlDevice != null becouse on POWER button we can turn off CTRL
+                if(_ctrlDevice != null)
+                    _ctrlDevice.Dispose();
                 _ctrlDevice = null;
 
                 DeviceConnectionStatusChanged(null, null);
@@ -310,12 +309,11 @@ namespace BluetoothLE
         {
             if (_ctrlDevice != null && _ctrlDevice.ConnectionStatus == BluetoothConnectionStatus.Connected)
             {
-                var deviceInfoService = _serviceCollection.Where(a => a.Name == "DeviceInformation").FirstOrDefault();
+                var deviceInfoService = _serviceCollection.Where(service => service.Name == "DeviceInformation").FirstOrDefault();
                 var deviceInfocharacteristics = await GetServiceCharacteristicsAsync(deviceInfoService);
 
-                var batteryService = _serviceCollection.Where(a => a.Name == "Battery").FirstOrDefault();
+                var batteryService = _serviceCollection.Where(service => service.Name == "Battery").FirstOrDefault();
                 var batteryCharacteristics = await GetServiceCharacteristicsAsync(batteryService);
-                //byte battery = await _batteryParser.ReadAsync();
 
                 return new CtrlDeviceInfo()
                 {
@@ -335,7 +333,7 @@ namespace BluetoothLE
             }
         }
 
-        public async Task Calibration()
+        public async Task CalibrationAsync()
         {
             //Write to CTRL
             if (_ctrlMeasurementCharacteristic.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Write))
@@ -352,5 +350,6 @@ namespace BluetoothLE
             }
 
         }
+
     }
 }
